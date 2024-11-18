@@ -8,6 +8,11 @@ package linkedin;
  *
  * @author julia
  */
-public class Company_Record_Management {
-    
+public class Company_Record_Management 
+{
+    public String    company_ID;
+    public String    company_name;
+    public String    main_location;
+    public String    contact_info;
+    public String    company_manager;
 }

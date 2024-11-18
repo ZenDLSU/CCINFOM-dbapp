@@ -8,6 +8,13 @@ package linkedin;
  *
  * @author julia
  */
-public class Job_Record_Management {
-    
+public class Job_Record_Management
+{
+    public String    jobID;
+    public String    companyID;
+    public String    branchID;
+    public String    positionName;
+    public String    skills;
+    public String    education;
+    public String    vacantTorF;
 }

@@ -1,10 +1,63 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Start Page</title>
+        <title>Record Management Dashboard</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+        .column {
+            width: 20%;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .column h2 {
+            background-color: #0044cc;
+            color: white;
+            padding: 10px 0;
+            margin: 0 -15px 15px -15px;
+            border-radius: 10px 10px 0 0;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #0044cc;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #003399;
+        }
+    </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <div class="column">
+            <h2>User Account Record Management</h2>
+            <button class="button">Create User Account</button>
+            <button class="button">Delete User Account</button>
+        </div>
+
+        <div class="column">
+            <h2>Branch Record Management</h2>
+        </div>
+
+        <div class="column">
+            <h2>Job Record Management</h2>
+        </div>
+
+        <div class="column">
+            <h2>Company Record Management</h2>
+        </div>
     </body>
 </html>

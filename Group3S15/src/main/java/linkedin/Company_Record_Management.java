@@ -10,9 +10,9 @@ package linkedin;
  */
 public class Company_Record_Management 
 {
-    public String    company_ID;
-    public String    company_name;
-    public String    main_location;
-    public String    contact_info;
-    public String    company_manager;
+    public String    companyID;
+    public String    companyName;
+    public String    mainLocation;
+    public String    contactInfo;
+    public String    companyManager;
 }

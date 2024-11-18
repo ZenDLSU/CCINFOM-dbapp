@@ -8,6 +8,10 @@ package linkedin;
  *
  * @author julia
  */
-public class Branch_Record_Management {
-    
+public class Branch_Record_Management 
+{
+    public String    branchID;
+    public String    companyID;
+    public String    location;
+    public String    contactInfo;
 }

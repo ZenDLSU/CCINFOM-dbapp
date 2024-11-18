@@ -10,6 +10,8 @@ import java.time.LocalDate;
  */
 public class UserAccount_Record_Management {
     public String    accountID;
+    public String    jobID;
+    public String    companyID;
     public String    firstName;
     public String    lastName;
     public String    contactInfo;

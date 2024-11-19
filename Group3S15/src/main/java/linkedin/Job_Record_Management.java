@@ -10,11 +10,9 @@ package linkedin;
  */
 public class Job_Record_Management
 {
-    public String    jobID;
-    public String    companyID;
-    public String    branchID;
-    public String    positionName;
-    public String    skills;
+    public String    job_ID;
+    public String    company_ID;
+    public String    branch_ID;
+    public String    position_name;
     public String    education;
-    public String    vacantTorF;
 }

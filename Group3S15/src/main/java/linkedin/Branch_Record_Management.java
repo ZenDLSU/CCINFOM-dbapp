@@ -10,8 +10,8 @@ package linkedin;
  */
 public class Branch_Record_Management 
 {
-    public String    branchID;
-    public String    companyID;
+    public String    branch_ID;
+    public String    company_ID;
     public String    location;
-    public String    contactInfo;
+    public String    contact_no;
 }

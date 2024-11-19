@@ -13,6 +13,6 @@ public class Company_Record_Management
     public String    companyID;
     public String    companyName;
     public String    mainLocation;
-    public String    contactInfo;
+    public String    contactNo;
     public String    companyManager;
 }

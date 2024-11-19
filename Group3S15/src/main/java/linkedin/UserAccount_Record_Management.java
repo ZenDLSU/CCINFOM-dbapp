@@ -14,7 +14,7 @@ public class UserAccount_Record_Management {
     public int account_ID;
     public String first_name;
     public String last_name;
-    public String contact_info;
+    public String contact_no;
     public String email;
     public String home_address;
     public LocalDate birthday;

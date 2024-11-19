@@ -54,7 +54,6 @@ DROP TABLE IF EXISTS `Job_Record_Management`;
 CREATE TABLE `Job_Record_Management` (
   `job_ID` DECIMAL(10,0) NOT NULL,
   `position_name` VARCHAR(100) NOT NULL,
-  `skills` TEXT DEFAULT NULL,
   `education` TEXT DEFAULT NULL,
   `company_ID` DECIMAL(10,0) DEFAULT NULL,
   `branch_ID` DECIMAL(10,0) DEFAULT NULL,

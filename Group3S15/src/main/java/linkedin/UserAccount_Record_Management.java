@@ -18,9 +18,8 @@ public class UserAccount_Record_Management {
     public String email;
     public String home_address;
     public LocalDate birthday;
-    public String skills;
+    public String years_of_experience
     public String education;
-    public String employment_history;
     public String primary_language;
     public String secondary_language;
     public int job_ID; 

@@ -5,7 +5,11 @@
 package linkedin;
 import java.time.LocalDate;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
+import java.time.format.DateTimeFormatter;
+
+
 /**
  *
  * @author julia
@@ -29,9 +33,10 @@ public class UserAccount_Record_Management {
     public int register_account(){
         try{
             Connection conn;
+            Class.forName("com.mysql.cj.jdbc.Driver");
             String user = "root";
             String password = "123456789";
-            String url = "jdbc:mysql://localhost:3306/group3s15";
+            String url = "jdbc:mysql://localhost:3306/group3s15?useSSL=false&serverTimezone=UTC";
             conn = DriverManager.getConnection(url, user, password);
             System.out.println("Connection Successful");
             PreparedStatement pstmt = conn.prepareStatement("SELECT COALESCE(MAX(account_ID), 0) + 1 AS newID FROM useraccount_record_management;");
@@ -40,19 +45,51 @@ public class UserAccount_Record_Management {
                 account_ID = rst.getInt("newID");
             }
             pstmt = conn.prepareStatement("INSERT INTO useraccount_record_management (account_ID, first_name, last_name, contact_no, email, home_address, birthday, education, years_of_experience, primary_language, secondary_language, job_ID, company_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            pstmt.setInt(1,account_ID);
-            pstmt.setString(2,first_name);
-            pstmt.setString(3,last_name);
-            pstmt.setNull(4, java.sql.Types.VARCHAR);
-            pstmt.setString(5,email);
-            pstmt.setNull(6, java.sql.Types.LONGVARCHAR);
-            pstmt.setNull(7, java.sql.Types.DATE);
-            pstmt.setNull(8, java.sql.Types.LONGVARCHAR);
-            pstmt.setNull(9, java.sql.Types.LONGVARCHAR);
-            pstmt.setString(10,primary_language);
-            pstmt.setNull(11, java.sql.Types.LONGVARCHAR);
-            pstmt.setNull(12, java.sql.Types.DECIMAL);
-            pstmt.setNull(13, java.sql.Types.DECIMAL);
+            pstmt.setInt(1, account_ID);
+            pstmt.setString(2, first_name);
+            pstmt.setString(3, last_name);
+            if (contact_no == null) {
+                pstmt.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                pstmt.setString(4, contact_no);
+            }
+            pstmt.setString(5, email);
+            if (home_address == null) {
+                pstmt.setNull(6, java.sql.Types.VARCHAR);
+            } else {
+                pstmt.setString(6, home_address);
+            }
+            if (birthday == null){
+                pstmt.setNull(7, java.sql.Types.DATE);
+            } else {
+                pstmt.setDate(7, java.sql.Date.valueOf(birthday));
+            }
+            if (education == null) {
+                pstmt.setNull(8, java.sql.Types.VARCHAR);
+            } else {
+                pstmt.setString(8, education);
+            }
+            if (years_of_experience == -1) {
+                pstmt.setNull(9, java.sql.Types.VARCHAR);
+            } else {
+                pstmt.setInt(9, years_of_experience);
+            }
+            pstmt.setString(10, primary_language);
+            if (secondary_language == null) {
+                pstmt.setNull(11, java.sql.Types.VARCHAR);
+            } else {
+                pstmt.setString(11, secondary_language);
+            }
+            if (job_ID == -1) {
+                pstmt.setNull(12, java.sql.Types.INTEGER); 
+            } else {
+                pstmt.setInt(12, job_ID); 
+            }
+            if (company_ID == -1) {
+                pstmt.setNull(13, java.sql.Types.INTEGER);
+            } else {
+                pstmt.setInt(13, company_ID);
+            }
             // and etc depending on how many fields there are
             pstmt.executeUpdate();
             pstmt.close();
@@ -63,14 +100,8 @@ public class UserAccount_Record_Management {
         }
         return 1;
     }
-    
-    public static void main(String args[]){
-        UserAccount_Record_Management a = new UserAccount_Record_Management();
-        a.first_name = "julian";
-        a.last_name = "briones";
-        a.email ="julian_briones@dlsu.edu.ph";
-        a.primary_language = "English";
-        a.register_account();
-        
+
+    public static void main(String args[]) {
+     
     }
 }

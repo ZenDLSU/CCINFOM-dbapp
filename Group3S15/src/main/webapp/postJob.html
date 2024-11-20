@@ -1,0 +1,32 @@
+<%-- 
+    Document   : submitAcc
+    Created on : Nov 20, 2024, 9:00:53 PM
+    Author     : julia
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*,linkedin.*,java.time.LocalDate,java.time.format.DateTimeFormatter" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <jsp:useBean id="B" class="linkedin.UserAccount_Record_Management" scope="request" />
+        <%
+
+            String company_ID = request.getParameter("company_ID");
+            String branch_ID = request.getParameter("branch_ID");
+            String position_name = request.getParameter("position_name");
+            String education = request.getParameter("education");
+            B.company_ID = String.valueOf(company_ID);
+            B.branch_ID = String.valueOf(branch_ID);
+            B.position_name = String.valueOf(position_namr);
+            if (education == null || education.isEmpty()) {
+                B.education = null;
+            B.post_job();
+        %>
+        <h1>Account Successfully Made</h1>
+    </body>
+</html>

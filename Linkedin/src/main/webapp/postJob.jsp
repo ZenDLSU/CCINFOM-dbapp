@@ -8,34 +8,39 @@
     </head>
     <body>
         <jsp:useBean id="B" class="link.Job_Record_Management" scope="request" />
-        
         <%
-    
-            String company_ID = request.getParameter("company_ID");
-            String branch_ID = request.getParameter("branch_ID");
-            String position_name = request.getParameter("position_name");
-            int positionID = Integer.parseInt(position_name);
-            String education = request.getParameter("education");
+            try {
+                //retrieve and parse form parameters
+                String company_ID = request.getParameter("company_ID");
+                String branch_ID = request.getParameter("branch_ID");
+                String position_ID = request.getParameter("position_ID");
+                String education = request.getParameter("education");
 
-            // Set the parameters for the Job_Record_Management bean
-            B.company_ID = Integer.parseInt(company_ID);  
-            B.branch_ID = Integer.parseInt(branch_ID);    
-            B.position_ID = positionID;             
-            if (education == null || education.isEmpty()) {
-                B.education = null;
-            } else {
-                B.education = education;
-            }
-            
-            int result = B.post_job(); //returns an integer for success/failure
+                //set parameters in the Job_Record_Management
+                B.company_ID = Integer.parseInt(company_ID);
+                B.branch_ID = (branch_ID == null || branch_ID.isEmpty()) ? -1 : Integer.parseInt(branch_ID);
+                B.position_ID = Integer.parseInt(position_ID);
+                B.education = (education == null || education.isEmpty()) ? null : education;
+
+                //call post_jpob
+                int result = B.post_job();
+                if (result == 0) {
         %>
-
-        <h1>Job Posted Successfully</h1>
-        <% if (result == 0) { %>
-            <h2>Error: Failed to post job. Please try again.</h2>
-        <% } else { %>
-            <h2>Job has been successfully posted!</h2>
-        <% } %>
-
+                    <h2>Error: Job posting failed. Please contact support if the problem persists.</h2>
+        <%
+                } else {
+        %>
+                    <h2>Job successfully posted with ID: <%= result %></h2>
+        <%
+                }
+            } catch (Exception e) {
+        %>
+                <h2>Error: Invalid input provided. Please check your data and try again.</h2>
+                <pre><%= e.getMessage() %></pre>
+        <%
+            }
+        %>
+        <a href="job_posting_index.html">Post Another Job</a>
+        <a href="homepage.html">Return to Home</a>
     </body>
 </html>

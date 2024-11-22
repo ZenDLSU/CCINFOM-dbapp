@@ -77,6 +77,27 @@ CREATE TABLE `UserAccount_Record_Management` (
   CONSTRAINT `fk_company_ID` FOREIGN KEY (`company_ID`) REFERENCES `Company_Record_Management` (`company_ID`) ON DELETE SET NULL
 );
 
+CREATE TABLE job_postings (
+    posting_ID INT AUTO_INCREMENT PRIMARY KEY,   
+    job_ID INT, table                                        
+    poster_user_ID INT,                          
+    posting_date DATETIME DEFAULT CURRENT_TIMESTAMP,  
+    expiry_date DATETIME,                        
+    status ENUM('Active', 'Expired', 'Closed') DEFAULT 'Active',
+    FOREIGN KEY (job_ID) REFERENCES job_record_management(job_ID),
+    FOREIGN KEY (poster_user_ID) REFERENCES user_account(user_ID)
+);
+
+CREATE TABLE job_application (
+    application_ID INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID INT,                       
+    posting_ID INT,                   
+    application_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Applied', 'Under Review', 'Accepted', 'Rejected') DEFAULT 'Applied',
+    FOREIGN KEY (user_ID) REFERENCES user_account(user_ID),
+    FOREIGN KEY (posting_ID) REFERENCES job_postings(posting_ID)
+);
+
 INSERT INTO `Company_Record_Management` (company_ID, company_name, contact_no, company_manager, main_location, company_password) 
 VALUES
 ('0001', 'Hololive Production', 'contact@hololive.tv', '0001', 'Tokyo, Japan', '123456'),

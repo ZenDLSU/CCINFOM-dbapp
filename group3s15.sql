@@ -77,7 +77,6 @@ CREATE TABLE `UserAccount_Record_Management` (
   CONSTRAINT `fk_company_ID` FOREIGN KEY (`company_ID`) REFERENCES `Company_Record_Management` (`company_ID`) ON DELETE SET NULL
 );
 
--- Insert into Company Record Management
 INSERT INTO `Company_Record_Management` (company_ID, company_name, contact_no, company_manager, main_location, company_password) 
 VALUES
 ('0001', 'Hololive Production', 'contact@hololive.tv', '0001', 'Tokyo, Japan', '123456'),
@@ -86,7 +85,6 @@ VALUES
 ('0004', 'PhaseALIAS', 'contact@phase-alia.com', '0004', 'Taipei, Taiwan', '123456'),
 ('0005', '774 inc.', 'contact@774inc.jp', '0005', 'Tokyo, Japan', '123456');
 
--- Insert into Branch Record Management
 INSERT INTO `Branch_Record_Management` (branch_ID, location, contact_no, company_ID)
 VALUES
 ('0001', 'Tokyo Branch', 'contact@hololive.tv', '0001'),
@@ -97,7 +95,6 @@ VALUES
 ('0006', 'Nagoya Branch', 'contact@hololive.tv', '0001'),
 ('0007', 'New York Branch', 'contact@nijisanji.jp', '0002');
 
--- Insert into Job Position Reference
 INSERT INTO `Job_Position_Reference` (position_ID, position_name, education)
 VALUES
 ('0001', 'Virtual YouTuber', 'Bachelor in Performing Arts'),
@@ -111,7 +108,7 @@ VALUES
 ('0009', 'Agriculture Consultant', 'Bachelor in Agriculture'),
 ('0010', 'Manager', 'Master in Business Administration');
 
--- Insert into Job Record Management
+
 INSERT INTO `Job_Record_Management` (job_ID, position_ID, company_ID, branch_ID)
 VALUES
 ('0001', '0001', '0001', '0001'),
@@ -125,7 +122,7 @@ VALUES
 ('0009', '0009', '0001', '0002'),
 ('0010', '0010', '0001', '0001');
 
--- insert into table
+
 INSERT INTO `UserAccount_Record_Management` 
 (account_ID, first_name, last_name, contact_no, email, home_address, birthday, years_of_experience, education, primary_language, secondary_language, job_ID, company_ID, user_password) 
 VALUES

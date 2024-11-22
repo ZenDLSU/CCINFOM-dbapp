@@ -1,46 +1,90 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.*,linkedin.*,java.time.LocalDate,java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <jsp:useBean id="B" class="linkedin.Job_Record_Management" scope="request" />
-        <%
-            try {
-                String company_ID = request.getParameter("company_ID");
-                String branch_ID = request.getParameter("branch_ID");
-                String position_name = request.getParameter("position_name");
-                String education = request.getParameter("education");
-
-                // Convert and assign values
-                B.company_ID = (company_ID != null && !company_ID.isEmpty()) ? Integer.parseInt(company_ID) : -1;
-                B.branch_ID = (branch_ID != null && !branch_ID.isEmpty()) ? Integer.parseInt(branch_ID) : -1;
-                B.position_name = position_name;
-
-                if (education == null || education.isEmpty()) {
-                    B.education = null;
-                } else {
-                    B.education = education;
-                }
-
-                // Post job
-                int result = B.post_job();
-
-                if (result == 1) {
-        %>
-                    <h1>Job Offering successfully posted!</h1>
-        <%
-                } else {
-        %>
-                    <h1>Error: Unable to post the job offering!</h1>
-        <%
-                }
-            } catch (Exception e) {
-                out.println("<h1>Error: " + e.getMessage() + "</h1>");
-            }
-        %>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Job Offering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            min-height: 600px;
+        }
+        .form-container h1 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-actions .clear {
+            background-color: #ccc;
+        }
+        .form-actions .submit {
+            background-color: #0056b3;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Post Job Offering</h1>
+        <form action="postJob.jsp" method="post">
+            <div class="form-group">
+                <label for="position-name">Position Name</label>
+                <input type="text" id="position-name" name="position_name" required>
+            </div>
+            <div class="form-group">
+                <label for="education">Education Requirement</label>
+                <input type="text" id="education" name="education">
+            </div>
+            <div class="form-group">
+                <label for="branch-id">Branch ID</label>
+                <input type="text" id="branch-id" name="branch_ID" required>
+            </div>
+            <div class="form-actions">
+                <button type="reset" class="clear">Clear</button>
+                <button type="submit" class="submit">Post</button>
+            </div>
+        </form>
+    </div>
+</body>
 </html>
+

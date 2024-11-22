@@ -1,3 +1,4 @@
 com\mycompany\linkedin\JakartaRestConfiguration.class
 link\login_logic.class
+link\Job_Record_Management.class
 com\mycompany\linkedin\resources\JakartaEE10Resource.class

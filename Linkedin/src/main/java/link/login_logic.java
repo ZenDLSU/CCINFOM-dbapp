@@ -38,7 +38,7 @@ public class login_logic {
                 resultSet.close();
                 statement.close();
                 conn.close();
-                return 1;
+                return 2;
             }
             System.out.println("Welcome, " + companyName + "!");
             sql = "SELECT * FROM UserAccount_Record_Management WHERE email = ? AND user_password = ?";

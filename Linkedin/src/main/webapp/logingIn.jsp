@@ -24,9 +24,11 @@
             int redirect = A.login();
             if (redirect == 1){
                 response.sendRedirect("homePage.html");
+            } else if (redirect == 2){
+                response.sendRedirect("job_posting_index.html");
             } else {
                 errorMessage = "Login failed. Please check your username and password.";
-                response.sendRedirect("index.html");  
+                response.sendRedirect("index.html");
             }
             %>
         <h1>Hello World!</h1>

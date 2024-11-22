@@ -90,10 +90,12 @@ CREATE TABLE job_postings (
 
 CREATE TABLE job_application (
     application_ID INT AUTO_INCREMENT PRIMARY KEY,
+    job_ID INT,
     user_ID INT,                       
     posting_ID INT,                   
     application_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('Applied', 'Under Review', 'Accepted', 'Rejected') DEFAULT 'Applied',
+    FOREIGN KEY (job_ID) REFERENCES jobs(job_ID),
     FOREIGN KEY (user_ID) REFERENCES user_account(user_ID),
     FOREIGN KEY (posting_ID) REFERENCES job_postings(posting_ID)
 );

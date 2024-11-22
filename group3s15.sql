@@ -123,7 +123,7 @@ VALUES
 ('0009', 'Tsunomaki', 'Watame', '123-456-7898', 'watame@hololive.tv', 'Ibaraki, Japan', '1998-08-03', '4 years', 'Bachelor in Performing Arts', 'Japanese', 'English', '0001', '0002','123456'),
 ('0010', 'Houshou', 'Marine', '123-456-7899', 'marine@hololive.tv', 'Okinawa, Japan', '1997-08-30', '3 years', 'Bachelor in Performing Arts', 'Japanese', 'English', '0005', '0002','123456'),
 ('0011', 'Nijisanji', 'Luca', '123-456-7800', 'luca@nijisanji.jp', 'Osaka, Japan', '1997-07-23', '2 years', 'Bachelor in Business Administration', 'Japanese', 'English', '0004', '0002','123456'),
-('0012', 'Ninomae', 'Inanis', '123-456-7801', 'ina@hololive.tv', 'Tokyo, Japan', '1996-05-10', '4 years', 'Master in Marketing', 'Japanese', 'English', '0008', '0003','123456'),
+('0012', 'Ina', 'Shirin', '123-456-7801', 'ina@hololive.tv', 'Tokyo, Japan', '1996-05-10', '4 years', 'Master in Marketing', 'Japanese', 'English', '0008', '0003','123456'),
 ('0013', 'Mori', 'Calliope', '123-456-7802', 'calliope@hololive.tv', 'Chiba, Japan', '1998-03-04', '5 years', 'Bachelor in Performing Arts', 'Japanese', 'English', '0002', '0005','123456'),
-('0014', 'Takane', 'Lui', '123-456-7803', 'lui@hololive.tv', 'Tokyo, Japan', '1999-02-12', '2 years', 'Bachelor in Fine Arts', 'Japanese', 'English', '0009', '0002','123456'),
-('0015', 'Ouro', 'Kronii', '123-456-7804', 'kronii@hololive.tv', 'Kyoto, Japan', '2000-06-07', '1 year', 'Bachelor in Marketing', 'Japanese', 'English', '0001', '0005','123456');
+('0014', 'Ryugu', 'Finana', '123-456-7803', 'finana@nijisanji.jp', 'Tokyo, Japan', '1999-02-12', '2 years', 'Bachelor in Fine Arts', 'Japanese', 'English', '0009', '0002','123456'),
+('0015', 'Yume', 'Saitou', '123-456-7804', 'saitou@vshojo.com', 'Kyoto, Japan', '2000-06-07', '1 year', 'Bachelor in Marketing', 'Japanese', 'English', '0001', '0005','123456');

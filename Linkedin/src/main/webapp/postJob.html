@@ -1,0 +1,46 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*,linkedin.*,java.time.LocalDate,java.time.format.DateTimeFormatter" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <jsp:useBean id="B" class="linkedin.Job_Record_Management" scope="request" />
+        <%
+            try {
+                String company_ID = request.getParameter("company_ID");
+                String branch_ID = request.getParameter("branch_ID");
+                String position_name = request.getParameter("position_name");
+                String education = request.getParameter("education");
+
+                // Convert and assign values
+                B.company_ID = (company_ID != null && !company_ID.isEmpty()) ? Integer.parseInt(company_ID) : -1;
+                B.branch_ID = (branch_ID != null && !branch_ID.isEmpty()) ? Integer.parseInt(branch_ID) : -1;
+                B.position_name = position_name;
+
+                if (education == null || education.isEmpty()) {
+                    B.education = null;
+                } else {
+                    B.education = education;
+                }
+
+                // Post job
+                int result = B.post_job();
+
+                if (result == 1) {
+        %>
+                    <h1>Job Offering successfully posted!</h1>
+        <%
+                } else {
+        %>
+                    <h1>Error: Unable to post the job offering!</h1>
+        <%
+                }
+            } catch (Exception e) {
+                out.println("<h1>Error: " + e.getMessage() + "</h1>");
+            }
+        %>
+    </body>
+</html>

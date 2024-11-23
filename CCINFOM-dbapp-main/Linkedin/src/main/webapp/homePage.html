@@ -5,15 +5,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 -->
 <html>
     <head>
+        <style>
+            header {
+                background-color: #0072b1; /* Sets the background color */
+                color: white; /* Makes the text white for contrast */
+                padding: 20px; /* Adds some spacing inside the header */
+                text-align: left; /* Centers the text inside the header */
+                font-size: 24px; /* Adjusts the font size */
+            }
+            .center {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
+
+        </style>
         <title>Job Finder</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <header> LinkedOut</header>
     </head>
     <body>
         <div>
-            <table> 
+            <table class = "center"> 
                 <tr>
-                    
+                    <td> Current User </td> 
+                </tr>
+                <tr>
+                    <td>
+                        <form action="jobapplicationacceptance/JobAppStatus.html" method="get">
+                            <button type="submit">Job Postings</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <form action="JobApplicationManagement.html" method="get">
+                            <button type="submit">Job Applications</button>
+                        </form>
+                    </td>
                 </tr>
             </table>
 

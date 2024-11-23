@@ -65,7 +65,6 @@ CREATE TABLE `user_accounts` (
   `education` TEXT DEFAULT NULL,
   `years_of_experience` DECIMAL(10,0) DEFAULT NULL,
   `primary_language` TEXT NOT NULL,
-  `secondary_language` TEXT DEFAULT NULL,
   `job_ID` DECIMAL(10,0) DEFAULT NULL,
   `company_ID` DECIMAL(10,0) DEFAULT NULL,
   `user_password` VARCHAR(255) NOT NULL,

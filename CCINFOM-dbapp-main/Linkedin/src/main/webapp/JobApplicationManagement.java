@@ -1,78 +1,38 @@
-package link;
-
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
 
-public class JobApplicationManagement {
+@WebServlet("/JobApplicationManagement")
+public class JobApplicationManagement extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    public int application_ID;
-    public int job_ID;
-    public String applicant_name;
-    public String applicant_email;
-    public String application_date;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Job> availableJobs = getAvailableJobs();
+        request.setAttribute("availableJobs", availableJobs);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("JobApplicationManagement.html");
+        dispatcher.forward(request, response);
+    }
 
-    //check if a job is available
-    public boolean isJobAvailable(int job_ID) {
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rst = null;
-    boolean isAvailable = false;
-
-    try {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/group3s15?useSSL=false&serverTimezone=UTC", "root", "123456789");
-        String query = "SELECT status FROM job_postings WHERE job_ID = ? AND status = 'Active'";
-        pstmt = conn.prepareStatement(query);
-        pstmt.setInt(1, job_ID);
-        rst = pstmt.executeQuery();
-
-        isAvailable = rst.next(); //job is vacant if any record matches
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        try {
-            if (rst != null) rst.close();
-            if (pstmt != null) pstmt.close();
-            if (conn != null) conn.close();
+    private List<Job> getAvailableJobs() {
+        List<Job> jobs = new ArrayList<>();
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT job_ID, position_name, years_of_experience, education FROM job_postings WHERE status = 'Available' ORDER BY years_of_experience")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                jobs.add(new Job(rs.getInt("job_ID"), rs.getString("position_name"), rs.getInt("years_of_experience"), rs.getString("education")));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return jobs;
     }
-    return isAvailable;
-}
-
-    //retrieveapplicant information
-    public void displayApplicantInfo(String applicant_email) {
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rst = null;
-
-    try {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/group3s15?useSSL=false&serverTimezone=UTC", "root", "123456789");
-        String query = "SELECT first_name, last_name FROM user_accounts WHERE email = ?";
-        pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, applicant_email);
-        rst = pstmt.executeQuery();
-
-        if (rst.next()) {
-            String firstName = rst.getString("first_name");
-            String lastName = rst.getString("last_name");
-            System.out.printf("Applicant Name: %s %s, Email: %s%n", firstName, lastName, applicant_email);
-        } else {
-            System.out.println("No applicant found with this email.");
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        try {
-            if (rst != null) rst.close();
-            if (pstmt != null) pstmt.close();
-            if (conn != null) conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
-
 }

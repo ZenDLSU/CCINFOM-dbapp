@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .requirements {
+            margin-top: 20px;
+        }
+        .requirement {
+            margin: 5px 0;
+        }
+        input[type="button"] {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+        input[type="button"]:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Job Details</h1>
+
+    <div>
+        <h2><%= jobDetails.getPositionName() %></h2>
+        <p>Company: <%= jobDetails.getCompanyName() %></p>
+        <p>Branch: <%= jobDetails.getBranchDetails() %></p>
+        <p>Years of Experience Required: <%= jobDetails.getYearsOfExperience() %></p>
+        <p>Education Required: <%= jobDetails.getEducation() %></p>
+    </div>
+
+    <div class="requirements">
+        <h3>Requirements Met:</h3>
+        <div class="requirement">Years of Experience: <%= (userExperience >= jobDetails.getYearsOfExperience()) ? "✔️" : "❌" %></div>
+        <div class="requirement">Education: <%= (userEducation.equals(jobDetails.getEducation())) ? "✔️" : "❌" %></div>
+    </div>
+
+    <input type="button" value="Apply" onclick="applyForJob(<%= jobDetails.getJobId() %>)">
+    <input type="button" value="Back" onclick="window.location.href='JobApplicationManagement.html'">
+    <script>
+        function applyForJob(jobId) {
+            // Logic to apply for the job
+            alert("Applying for job ID: " + jobId);
+        }
+    </script>
+
+</body>
+</html>

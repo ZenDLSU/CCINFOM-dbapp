@@ -8,4 +8,21 @@
             30
         </session-timeout>
     </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Servlet for Status and Expiry Report -->
+    <servlet>
+        <servlet-name>StatusAndExpiryReport</servlet-name>
+        <servlet-class>link.StatusAndExpiryReport</servlet-class> 
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>StatusAndExpiryReport</servlet-name>
+        <url-pattern>/generateReport</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
+

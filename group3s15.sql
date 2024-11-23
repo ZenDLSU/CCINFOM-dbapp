@@ -166,3 +166,21 @@ VALUES
 ('0013', 'Mori', 'Calliope', '123-456-7802', 'calliope@hololive.tv', 'Chiba, Japan', '1998-03-04', '5', 'Bachelor in Performing Arts', 'Japanese', '0002', '0005', '123456'),
 ('0014', 'Ryugu', 'Finana', '123-456-7803', 'finana@nijisanji.jp', 'Tokyo, Japan', '1999-02-12', '2', 'Bachelor in Fine Arts', 'Japanese', '0009', '0002', '123456'),
 ('0015', 'Yume', 'Saitou', '123-456-7804', 'saitou@vshojo.com', 'Kyoto, Japan', '2000-06-07', '1', 'Bachelor in Marketing', 'Japanese', '0001', '0005', '123456');
+
+INSERT INTO 'job_applications' (job_ID, account_ID, posting_ID, application_date, status) 
+VALUES
+('0001', '0001', '0002', '2020-05-27', 'Under Review'),
+('0001', '0009', '0003', '2020-12-28', 'Rejected'),
+('0001', '0015', '0013', '2023-04-22', 'Rejected'),
+('0002', '0002', '0015', '2023-10-08', 'Applied'),
+('0002', '0007', '0008', '2022-05-04', 'Under Review'),
+('0002', '0013', '0001', '2020-07-24', 'Under Review'),
+('0003', '0008', '0007', '2022-02-18', 'Accepted'),
+('0004', '0004', '0004', '2021-03-12', 'Applied'),
+('0005', '0005', '0009', '2022-08-02', 'Accepted'),
+('0005', '0010', '0010', '2022-10-05', 'Rejected'),
+('0006', '0006', '0011', '2022-11-07', 'Accepted'),
+('0007', '0003', '0006', '2022-01-19', 'Accepted'),
+('0008', '0012', '0005', '2021-06-15', 'Applied'),
+('0009', '0014', '0014', '2023-09-29', 'Under Review'),
+('0010', '0011', '0012', '2023-04-20', 'Under Review');

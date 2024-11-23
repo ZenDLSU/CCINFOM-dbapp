@@ -57,7 +57,7 @@ CREATE TABLE `jobs` (
 -- job postings table
 CREATE TABLE job_postings (
     posting_ID INT AUTO_INCREMENT PRIMARY KEY,   
-    job_ID INT, table                                        
+    job_ID INT,                                         
     poster_user_ID INT,                          
     posting_date DATETIME DEFAULT CURRENT_TIMESTAMP,  
     expiry_date DATETIME,                        

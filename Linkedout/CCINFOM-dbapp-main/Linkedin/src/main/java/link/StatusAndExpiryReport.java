@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@WebServlet("/StatusAndExpiryReport")
 public class StatusAndExpiryReport extends HttpServlet {
 
     @Override
@@ -21,7 +23,7 @@ public class StatusAndExpiryReport extends HttpServlet {
         String timeDimension = request.getParameter("time_dimension");
         String query = generateQuery(timeDimension);
 
-        try (Connection conn = DatabaseConnection.initializeDatabase();
+        try (Connection conn = DatabaseConnection.initializeDatabase();  // Use the DatabaseConnection class
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             ResultSet rs = stmt.executeQuery();
@@ -33,8 +35,10 @@ public class StatusAndExpiryReport extends HttpServlet {
             while (rs.next()) {
                 String status = rs.getString("status");
                 String details = String.format(
-                    "Job ID: %d | Posting Date: %s | Expiry/Closed Date: %s<br>",
+                    "Job ID: %d | Position: %s | Company: %s | Posting Date: %s | Expiry/Closed Date: %s<br>",
                     rs.getInt("job_ID"),
+                    rs.getString("position_name"),
+                    rs.getString("company_name"),
                     rs.getString("posting_date"),
                     rs.getString("expiry_or_closed_date")
                 );
@@ -61,30 +65,38 @@ public class StatusAndExpiryReport extends HttpServlet {
     }
 
     private String generateQuery(String timeDimension) {
-        String dateColumn;
+        String dateGrouping;
         switch (timeDimension.toLowerCase()) {
             case "year":
-                dateColumn = "YEAR(posting_date)";
+                dateGrouping = "YEAR(posting_date)";
                 break;
             case "month":
-                dateColumn = "YEAR(posting_date), MONTH(posting_date)";
+                dateGrouping = "YEAR(posting_date), MONTH(posting_date)";
                 break;
             case "day":
-                dateColumn = "DATE(posting_date)";
+                dateGrouping = "DATE(posting_date)";
                 break;
             case "month_year":
-                dateColumn = "YEAR(posting_date), MONTH(posting_date)";
+                dateGrouping = "YEAR(posting_date), MONTH(posting_date)";
                 break;
             default:
-                dateColumn = "DATE(posting_date)";
+                dateGrouping = "DATE(posting_date)";
         }
 
-        return "SELECT job_ID, posting_date, " +
-               "CASE " +
-               "WHEN status = 'Active' THEN NULL ELSE expiry_date END AS expiry_or_closed_date, " +
-               "status " +
-               "FROM job_postings " +
-               "ORDER BY status DESC, " +
-               "CASE WHEN status = 'Active' THEN posting_date ELSE expiry_date END";
+        return String.format(
+            "SELECT jp.job_ID, jp.posting_date, " +
+            "CASE " +
+            "    WHEN jp.status IN ('Expired', 'Closed') THEN jp.expiry_date " +
+            "    ELSE NULL " +
+            "END AS expiry_or_closed_date, " +
+            "jp.status, " +
+            "rjp.position_name, " +
+            "c.company_name " +
+            "FROM job_postings jp " +
+            "JOIN REF_job_position rjp ON jp.position_id = rjp.position_id " +
+            "JOIN companies c ON jp.company_id = c.company_id " +
+            "ORDER BY FIELD(jp.status, 'Active', 'Expired', 'Closed'), " +
+            "CASE WHEN jp.status = 'Active' THEN jp.posting_date ELSE jp.expiry_date END"
+        );
     }
 }

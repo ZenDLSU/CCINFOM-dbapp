@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Home</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        header {
+            background-color: #0073b1;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .hero {
+            background-color: #004080;
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+            color: #0073b1;
+            margin-bottom: 20px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .links a {
+            display: block;
+            padding: 15px;
+            background-color: #f3f6f9;
+            color: #0073b1;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #0073b1;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .links a:hover {
+            background-color: #0073b1;
+            color: white;
+        }
+        footer {
+            background-color: #f3f6f9;
+            text-align: center;
+            padding: 10px 20px;
+            margin-top: 30px;
+            color: #555555;
+            font-size: 0.9em;
+        }
+        footer a {
+            color: #0073b1;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">LinkedOut</div>
+    </header>
+
+    <section class="hero">
+        <h1>Company Dashboard</h1>
+    </section>
+
+    <div class="container">
+        <h2>Quick Access</h2>
+        <div class="links">
+            <a href="post_job.jsp">Post Job Offering</a>
+            <a href="company_view_job_applications.jsp">View Job Applicants</a>
+            <a href="add_branch.jsp">Declare Branches</a>
+            <a href="view_accepted_rejected_applications.jsp">List of Accepted/Rejected Applicants</a>
+            <a href="view_jobs.jsp">Delete Job Posting</a>
+            <a href="companylogout.jsp">Logout</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 LinkedOut. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>

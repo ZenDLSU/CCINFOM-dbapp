@@ -1,186 +1,246 @@
-CREATE DATABASE IF NOT EXISTS `group3s15`;
-USE `group3s15`;
-
--- Drop Tables if they Exist
-DROP TABLE IF EXISTS `job_applications`;
-DROP TABLE IF EXISTS `job_postings`;
+DROP TABLE IF EXISTS `user_job_applications`;
+DROP TABLE IF EXISTS `active_jobs`;
+DROP TABLE IF EXISTS `company_employees`;
+DROP TABLE IF EXISTS `company_branches`;
+DROP TABLE IF EXISTS `company_accounts`;
 DROP TABLE IF EXISTS `user_accounts`;
-DROP TABLE IF EXISTS `jobs`;
-DROP TABLE IF EXISTS `branches`;
-DROP TABLE IF EXISTS `companies`;
-DROP TABLE IF EXISTS `REF_job_position`;
--- companies table
-CREATE TABLE `companies` (
-  `company_ID` DECIMAL(10,0) NOT NULL,
-  `company_name` VARCHAR(100) NOT NULL,
-  `contact_no` TEXT DEFAULT NULL,
-  `company_manager` DECIMAL(10,0) NOT NULL,
-  `main_location` VARCHAR(100) NOT NULL,
-  `company_password` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`company_ID`),
-  UNIQUE KEY `company_name_UK` (`company_name`)
+DROP TABLE IF EXISTS `REF_job_titles`; 
+
+CREATE TABLE `REF_job_titles` (
+    job_id INT PRIMARY KEY AUTO_INCREMENT,
+    job_title VARCHAR(255) NOT NULL,
+    job_description TEXT
 );
 
--- branches table
-CREATE TABLE `branches` (
-  `branch_ID` DECIMAL(10,0) NOT NULL,
-  `location` VARCHAR(100) NOT NULL,
-  `contact_no` TEXT DEFAULT NULL,
-  `company_ID` DECIMAL(10,0) DEFAULT NULL,
-  PRIMARY KEY (`branch_ID`),
-  KEY `branch_company_IX` (`company_ID`),
-  CONSTRAINT `fk_branch_company_ID` FOREIGN KEY (`company_ID`) REFERENCES `companies` (`company_ID`) ON DELETE SET NULL
-);
-
--- job position reference table
-CREATE TABLE `REF_job_position` (
-  `position_ID` DECIMAL(10,0) NOT NULL,
-  `position_name` VARCHAR(100) NOT NULL UNIQUE,
-  PRIMARY KEY (`position_ID`)
-);
-
--- jobs table
-CREATE TABLE `jobs` (
-  `job_ID` DECIMAL(10,0) NOT NULL,
-  `position_ID` DECIMAL(10,0) NOT NULL,
-  `education` ENUM ('None', 'High School', 'Bachelors', 'Masters','PhD') default 'None',
-  `company_ID` DECIMAL(10,0) DEFAULT NULL,
-  `branch_ID` DECIMAL(10,0) DEFAULT NULL,
-  PRIMARY KEY (`job_ID`),
-  KEY `job_position_IX` (`position_ID`),
-  KEY `job_company_IX` (`company_ID`),
-  KEY `job_branch_IX` (`branch_ID`),
-  CONSTRAINT `fk_job_position_ID` FOREIGN KEY (`position_ID`) REFERENCES `REF_job_position` (`position_ID`) ON DELETE CASCADE,
-  CONSTRAINT `fk_job_company_ID` FOREIGN KEY (`company_ID`) REFERENCES `companies` (`company_ID`) ON DELETE SET NULL,
-  CONSTRAINT `fk_job_branch_ID` FOREIGN KEY (`branch_ID`) REFERENCES `branches` (`branch_ID`) ON DELETE SET NULL
-);
 CREATE TABLE `user_accounts` (
-  `account_ID` DECIMAL(10,0) NOT NULL,
-  `first_name` VARCHAR(50) NOT NULL,
-  `last_name` VARCHAR(50) NOT NULL,
-  `contact_no` TEXT DEFAULT NULL,
-  `email` VARCHAR(100) NOT NULL,
-  `home_address` TEXT DEFAULT NULL,
+  `account_ID` BIGINT NOT NULL,
+  `first_name` VARCHAR(45) NOT NULL,
+  `last_name` VARCHAR(45) NOT NULL,
+  `age` INT NOT NULL,
+  `contact_num` BIGINT NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `home_address` VARCHAR(45) DEFAULT NULL,
   `birthday` DATE DEFAULT NULL,
-  `education` TEXT DEFAULT NULL,
-  `years_of_experience` DECIMAL(10,0) DEFAULT NULL,
-  `primary_language` TEXT NOT NULL,
-  `job_ID` DECIMAL(10,0) DEFAULT NULL,
-  `company_ID` DECIMAL(10,0) DEFAULT NULL,
-  `user_password` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`account_ID`),
-  UNIQUE KEY `UA_email_UK` (`email`),
-  KEY `UA_name_IX` (`last_name`, `first_name`),
-  CONSTRAINT `fk_job_ID` FOREIGN KEY (`job_ID`) REFERENCES `jobs` (`job_ID`) ON DELETE SET NULL,
-  CONSTRAINT `fk_company_ID` FOREIGN KEY (`company_ID`) REFERENCES `companies` (`company_ID`) ON DELETE SET NULL
+  `primary_language` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `years_of_experience` INT DEFAULT 0 NOT NULL,
+  `highest_education` ENUM('High School', 'Associate', 'Bachelor', 'Master', 'Doctorate', 'Other') NOT NULL,
+  `date_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`account_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `company_accounts` (
+  `company_ID` INT NOT NULL,
+  `company_name` VARCHAR(45) NOT NULL,
+  `contact_number` BIGINT NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `main_address` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `date_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`company_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `company_branches` (
+  `branch_ID` INT NOT NULL AUTO_INCREMENT,
+  `address` VARCHAR(45) NOT NULL,
+  `company_ID` INT NOT NULL,
+  PRIMARY KEY (`branch_ID`),
+  FOREIGN KEY (`company_ID`) REFERENCES `company_accounts`(`company_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `active_jobs` (
+    job_opening_id INT PRIMARY KEY AUTO_INCREMENT,
+    job_id INT NOT NULL, 
+    company_id INT,
+    location VARCHAR(255),
+    salary DECIMAL(10, 2),
+    is_filled BOOLEAN DEFAULT FALSE,
+    posting_date DATE,
+    closing_date DATE,
+    FOREIGN KEY (job_id) REFERENCES REF_job_titles(job_id)
 );
--- job postings table
-CREATE TABLE job_postings (
-    posting_ID INT AUTO_INCREMENT PRIMARY KEY,   
-    `job_ID` DECIMAL(10,0) NOT NULL,                                 
-    poster_user_ID DECIMAL(10,0),                          
-    posting_date DATETIME DEFAULT CURRENT_TIMESTAMP,  
-    expiry_date DATETIME,                        
-    `status` ENUM('Active', 'Expired', 'Closed') DEFAULT 'Active',
-    FOREIGN KEY (job_ID) REFERENCES jobs(job_ID),
-    FOREIGN KEY (poster_user_ID) REFERENCES `user_accounts`(account_ID)
-);
 
--- job applications table
-CREATE TABLE job_applications (
-    application_ID INT AUTO_INCREMENT PRIMARY KEY,
-    `job_ID` DECIMAL(10,0) NOT NULL,
-	`account_ID` DECIMAL(10,0) NOT NULL,                      
-    posting_ID INT,                   
-    application_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('Applied', 'Under Review', 'Accepted', 'Rejected') DEFAULT 'Applied',
-    FOREIGN KEY (job_ID) REFERENCES jobs(job_ID),
-    FOREIGN KEY (account_ID) REFERENCES user_accounts(account_ID),
-    FOREIGN KEY (posting_ID) REFERENCES job_postings(posting_ID)
-);
+CREATE TABLE `user_job_applications` (
+  `application_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `account_ID` BIGINT NOT NULL,
+  `job_id` INT NOT NULL,
+  `company_ID` INT NOT NULL,
+  `application_date` DATE NOT NULL,
+  `application_status` ENUM('Pending', 'Accepted', 'Rejected') NOT NULL,
+  FOREIGN KEY (`account_ID`) REFERENCES `user_accounts`(`account_ID`),
+  FOREIGN KEY (`job_id`) REFERENCES `REF_job_titles`(`job_id`),
+  FOREIGN KEY (`company_ID`) REFERENCES `company_accounts`(`company_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `company_employees` (
+  `employee_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `account_ID` BIGINT NOT NULL,
+  `company_ID` INT NOT NULL,
+  `date_hired` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`account_ID`) REFERENCES `user_accounts`(`account_ID`),
+  FOREIGN KEY (`company_ID`) REFERENCES `company_accounts`(`company_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
-
-INSERT INTO `companies` (company_ID, company_name, contact_no, company_manager, main_location, company_password) 
-VALUES
-('0001', 'Hololive Production', 'contact@hololive.tv', '0001', 'Tokyo, Japan', '123456'),
-('0002', 'Nijisanji', 'contact@nijisanji.jp', '0002', 'Tokyo, Japan', '123456'),
-('0003', 'Vshojo', 'contact@vshojo.com', '0003', 'Los Angeles, USA', '123456'),
-('0004', 'PhaseALIAS', 'contact@phase-alia.com', '0004', 'Taipei, Taiwan', '123456'),
-('0005', '774 inc.', 'contact@774inc.jp', '0005', 'Tokyo, Japan', '123456');
-
-INSERT INTO `branches` (branch_ID, location, contact_no, company_ID)
-VALUES
-('0001', 'Tokyo Branch', 'contact@hololive.tv', '0001'),
-('0002', 'Osaka Branch', 'contact@nijisanji.jp', '0002'),
-('0003', 'Los Angeles Branch', 'contact@vshojo.com', '0003'),
-('0004', 'Taipei Branch', 'contact@phase-alia.com', '0004'),
-('0005', 'Kyoto Branch', 'contact@774inc.jp', '0005'),
-('0006', 'Nagoya Branch', 'contact@hololive.tv', '0001'),
-('0007', 'New York Branch', 'contact@nijisanji.jp', '0002');
-
-INSERT INTO `REF_job_position` (position_ID, position_name)
-VALUES
-('0001', 'Virtual YouTuber'),
-('0002', 'Artist'),
-('0003', 'Marketing Manager'),
-('0004', 'Environmental Analyst'),
-('0005', 'Performing Arts Lead'),
-('0006', 'Culinary Specialist'),
-('0007', 'Apprentice'),
-('0008', 'Brand Strategist'),
-('0009', 'Agriculture Consultant'),
-('0010', 'Manager');
-
-
-INSERT INTO `jobs` (job_ID, position_ID, education, company_ID, branch_ID)
-VALUES
-('0001', '0001','Bachelors','0001', '0001'),
-('0002', '0002','Bachelors', '0001', '0002'),
-('0003', '0003','Bachelors', '0004', '0004'),
-('0004', '0004','Bachelors', '0004', '0005'),
-('0005', '0005','Bachelors', '0001', '0001'),
-('0006', '0006','Bachelors', '0005', '0005'),
-('0007', '0007','Bachelors', '0003', '0003'),
-('0008', '0008','Bachelors', '0004', '0004'),
-('0009', '0009','Bachelors', '0001', '0002'),
-('0010', '0010','Bachelors', '0001', '0001');
-
+INSERT INTO `REF_job_titles` (job_title, job_description) VALUES
+('Software Engineer', 'Develop and maintain software applications.'),
+('Data Scientist', 'Analyze and interpret complex data to aid decision-making.'),
+('Digital Marketer', 'Plan and execute online marketing strategies.'),
+('Project Manager', 'Oversee projects and ensure timely completion.'),
+('Graphic Designer', 'Create visual content for digital and print media.'),
+('Accountant', 'Prepare and manage financial records and reports.'),
+('HR Specialist', 'Handle recruitment, training, and employee relations.'),
+('Web Developer', 'Design and maintain websites.'),
+('UX Designer', 'Enhance user experiences through design and research.'),
+('Mobile Developer', 'Develop mobile applications for iOS and Android.'),
+('Network Engineer', 'Manage and maintain network infrastructure.'),
+('Technical Writer', 'Create technical documentation and manuals.'),
+('AI Specialist', 'Develop and integrate AI technologies.'),
+('Content Writer', 'Produce engaging written content for various media.'),
+('Sales Executive', 'Manage sales and build client relationships.'),
+('Customer Support', 'Assist customers with inquiries and issues.'),
+('Operations Manager', 'Streamline and oversee business operations.'),
+('Cybersecurity Analyst', 'Protect systems from cyber threats.'),
+('Financial Analyst', 'Evaluate financial data to advise decisions.'),
+('Supply Chain Manager', 'Oversee supply chain and logistics operations.');
 
 INSERT INTO `user_accounts` 
-(account_ID, first_name, last_name, contact_no, email, home_address, birthday, years_of_experience, education, primary_language, job_ID, company_ID, user_password) 
+(account_ID, first_name, last_name, age, contact_num, email, home_address, birthday, primary_language, password, years_of_experience, highest_education, date_created) 
 VALUES
-('0001', 'Shirakami', 'Fubuki', '123-456-7890', 'fubuki@hololive.tv', 'Tokyo, Japan', '1998-10-05', '5', 'Bachelor in Performing Arts', 'Japanese', '0001', '0001', '123456'),
-('0002', 'Aki', 'Rosa', '123-456-7891', 'aki@hololive.tv', 'Tokyo, Japan', '1992-07-01', '3', 'Bachelor in Fine Arts', 'Japanese', '0002', '0001', '123456'),
-('0003', 'Sakura', 'Miko', '123-456-7892', 'miko@hololive.tv', 'Osaka, Japan', '1996-04-22', '4', 'Bachelor in Marketing', 'Japanese', '0007', '0001', '123456'),
-('0004', 'Oozora', 'Subaru', '123-456-7893', 'subaru@hololive.tv', 'Chiba, Japan', '1996-12-03', '4', 'Bachelor in Marketing', 'Japanese', '0004', '0001', '123456'),
-('0005', 'Hoshimachi', 'Suisei', '123-456-7894', 'suisei@hololive.tv', 'Nagoya, Japan', '1996-03-22', '3', 'Bachelor in Performing Arts', 'Japanese', '0005', '0001', '123456'),
-('0006', 'Murasaki', 'Shion', '123-456-7895', 'shion@hololive.tv', 'Tokyo, Japan', '2000-05-24', '2', 'Bachelor in Fine Arts', 'Japanese', '0006', '0001', '123456'),
-('0007', 'Yozora', 'Mel', '123-456-7896', 'mel@hololive.tv', 'Fukuoka, Japan', '1996-03-02', '3', 'Bachelor in Fine Arts', 'Japanese', '0002', '0001', '123456'),
-('0008', 'Amane', 'Kanata', '123-456-7897', 'kanata@hololive.tv', 'Sapporo, Japan', '1999-10-02', '3', 'Bachelor in Performing Arts', 'Japanese', '0003', '0001', '123456'),
-('0009', 'Tsunomaki', 'Watame', '123-456-7898', 'watame@hololive.tv', 'Ibaraki, Japan', '1998-08-03', '4', 'Bachelor in Performing Arts', 'Japanese', '0001', '0002', '123456'),
-('0010', 'Houshou', 'Marine', '123-456-7899', 'marine@hololive.tv', 'Okinawa, Japan', '1997-08-30', '3', 'Bachelor in Performing Arts', 'Japanese', '0005', '0002', '123456'),
-('0011', 'Nijisanji', 'Luca', '123-456-7800', 'luca@nijisanji.jp', 'Osaka, Japan', '1997-07-23', '2', 'Bachelor in Business Administration', 'Japanese', '0010', '0002', '123456'),
-('0012', 'Ina', 'Shirin', '123-456-7801', 'ina@hololive.tv', 'Tokyo, Japan', '1996-05-10', '4', 'Bachelor in Marketing', 'Japanese', '0008', '0003', '123456'),
-('0013', 'Mori', 'Calliope', '123-456-7802', 'calliope@hololive.tv', 'Chiba, Japan', '1998-03-04', '5', 'Bachelor in Performing Arts', 'Japanese', '0002', '0005', '123456'),
-('0014', 'Ryugu', 'Finana', '123-456-7803', 'finana@nijisanji.jp', 'Tokyo, Japan', '1999-02-12', '2', 'Bachelor in Fine Arts', 'Japanese', '0009', '0002', '123456'),
-('0015', 'Yume', 'Saitou', '123-456-7804', 'saitou@vshojo.com', 'Kyoto, Japan', '2000-06-07', '1', 'Bachelor in Marketing', 'Japanese', '0001', '0005', '123456');
+(1, 'John', 'Doe', 29, 9876543210, 'johndoe@gmail.com', '123 Elm St.', '1995-06-15', 'English', 'password123', 5, 'Bachelor', '2024-01-01'),
+(2, 'Jane', 'Smith', 35, 9123456789, 'janesmith@hotmail.com', '456 Maple Ave.', '1989-04-10', 'English', 'securepass', 10, 'Master', '2024-01-02'),
+(3, 'Robert', 'Brown', 42, 9871122334, 'robert.brown@yahoo.com', '789 Pine Rd.', '1982-12-01', 'English', 'mypassword', 18, 'Bachelor', '2024-01-03'),
+(4, 'Emily', 'Johnson', 27, 9823456712, 'emilyj@gmail.com', '321 Oak Blvd.', '1997-11-21', 'English', 'emily123', 4, 'Bachelor', '2024-01-04'),
+(5, 'Michael', 'Lee', 31, 9812345678, 'mike.lee@outlook.com', '654 Spruce St.', '1993-05-25', 'English', 'mikepassword', 7, 'Master', '2024-01-05'),
+(6, 'Sarah', 'Williams', 38, 9809876543, 'sarahw@yahoo.com', '987 Walnut Rd.', '1986-03-19', 'English', 'sarahsecure', 14, 'Bachelor', '2024-01-06'),
+(7, 'David', 'Taylor', 45, 9797654321, 'david.taylor@live.com', '159 Cherry Ln.', '1979-08-11', 'English', 'davidpw', 20, 'Master', '2024-01-07'),
+(8, 'Sophia', 'Martinez', 24, 9781234567, 'sophiamartinez@gmail.com', '753 Birch Way', '2000-10-03', 'English', 'sophiapw', 2, 'Bachelor', '2024-01-08'),
+(9, 'James', 'Garcia', 37, 9776543210, 'james.garcia@hotmail.com', '951 Cedar Ct.', '1987-07-15', 'English', 'james123', 12, 'Bachelor', '2024-01-09'),
+(10, 'Linda', 'Hernandez', 33, 9763456789, 'linda.hernandez@aol.com', '852 Fir Rd.', '1991-09-25', 'English', 'lindapass', 8, 'Master', '2024-01-10'),
+(11, 'Andrew', 'Lopez', 30, 9751234567, 'andrew.lopez@gmail.com', '963 Redwood Blvd.', '1994-01-14', 'English', 'andrewpw', 6, 'Bachelor', '2024-01-11'),
+(12, 'Elizabeth', 'Clark', 26, 9749876543, 'elizabeth.clark@yahoo.com', '741 Aspen Ave.', '1998-05-06', 'English', 'elizabethsecure', 3, 'Bachelor', '2024-01-12'),
+(13, 'Christopher', 'Rodriguez', 39, 9736543210, 'chris.rodriguez@hotmail.com', '632 Maple Dr.', '1985-04-20', 'English', 'chrispw', 15, 'Bachelor', '2024-01-13'),
+(14, 'Emma', 'King', 28, 9723456789, 'emma.king@outlook.com', '521 Willow Ct.', '1996-02-12', 'English', 'emmapass', 5, 'Master', '2024-01-14'),
+(15, 'Ryan', 'Walker', 41, 9711234567, 'ryan.walker@gmail.com', '412 Poplar Rd.', '1983-06-07', 'English', 'ryansecure', 16, 'Master', '2024-01-15'),
+(16, 'Mia', 'Perez', 23, 9709876543, 'mia.perez@hotmail.com', '357 Palm St.', '2001-08-19', 'English', 'miapassword', 1, 'Bachelor', '2024-01-16'),
+(17, 'Ethan', 'Scott', 36, 9697654321, 'ethan.scott@yahoo.com', '159 Sycamore Ln.', '1988-11-30', 'English', 'ethanpw', 11, 'Bachelor', '2024-01-17'),
+(18, 'Olivia', 'Hill', 29, 9681234567, 'olivia.hill@live.com', '753 Cypress Ave.', '1995-09-10', 'English', 'oliviapass', 6, 'Bachelor', '2024-01-18'),
+(19, 'Lucas', 'Adams', 32, 9676543210, 'lucas.adams@gmail.com', '951 Mahogany Ct.', '1992-04-22', 'English', 'lucaspw', 9, 'Bachelor', '2024-01-19'),
+(20, 'Chloe', 'Baker', 27, 9663456789, 'chloe.baker@outlook.com', '852 Chestnut Rd.', '1997-10-15', 'English', 'chloepass', 4, 'Master', '2024-01-20');
 
-INSERT INTO `job_applications` (application_ID, job_ID, account_ID, posting_ID, application_date, status) 
-VALUES
-('0001', '0001', '0001', '0001', '2020-05-27', 'Under Review'),
-('0002', '0002', '0013', '0002', '2020-07-24', 'Under Review'),
-('0003', '0001', '0009', '0003', '2020-12-28', 'Rejected'),
-('0004', '0004', '0004', '0004', '2021-03-12', 'Applied'),
-('0005', '0008', '0012', '0005', '2021-06-15', 'Applied'),
-('0006', '0007', '0003', '0006', '2022-01-19', 'Accepted'),
-('0007', '0003', '0008', '0007', '2022-02-18', 'Accepted'),
-('0008', '0002', '0007', '0008', '2022-05-04', 'Under Review'),
-('0009', '0005', '0005', '0009', '2022-08-02', 'Accepted'),
-('0010', '0005', '0010', '0010', '2022-10-05', 'Rejected'),
-('0011', '0006', '0006', '0011', '2022-11-07', 'Accepted'),
-('0012', '0010', '0011', '0012', '2023-04-20', 'Under Review'),
-('0013', '0001', '0015', '0013', '2023-04-22', 'Rejected'),
-('0014', '0009', '0014', '0014', '2023-09-29', 'Under Review'),
-('0015', '0002', '0002', '0015', '2023-10-08', 'Applied');
+INSERT INTO `company_accounts` (company_ID, company_name, contact_number, email, main_address, password, date_created) VALUES
+(1, 'Tech Innovations', 9876543211, 'contact@techinnovations.com', '123 Silicon Blvd.', 'compassword1', '2024-01-01'),
+(2, 'Creative Designs Co.', 9123345678, 'info@creativedesigns.com', '456 Art Lane', 'securecomp', '2024-01-02'),
+(3, 'Global Solutions', 9876654432, 'hello@globalsolutions.net', '789 Industry Ave.', 'glopass', '2024-01-03'),
+(4, 'Future Builders', 9823456778, 'info@futurebuilders.com', '321 Modern Rd.', 'builderpass', '2024-01-04'),
+(5, 'AI Pioneers', 9812341234, 'contact@aipioneers.ai', '654 Digital Blvd.', 'aipass', '2024-01-05'),
+(6, 'HealthFirst Solutions', 9123345699, 'info@healthfirst.com', '123 Wellness Blvd.', 'healthpass', '2024-01-06'),
+(7, 'EcoGreen Industries', 9876654321, 'contact@ecogreen.com', '789 Sustainability Ave.', 'ecogreenpass', '2024-01-07'),
+(8, 'NextGen Robotics', 9823456790, 'support@nextgenrobotics.ai', '456 Automation Way', 'nextgenpass', '2024-01-08'),
+(9, 'Bright Minds Academy', 9812341299, 'hello@brightminds.edu', '321 Education Rd.', 'brightminds123', '2024-01-09'),
+(10, 'Urban Developers Ltd.', 9809876542, 'contact@urbandevelopers.com', '654 City Center Blvd.', 'urbanpassword', '2024-01-10'),
+(11, 'Quantum Analytics', 9871122390, 'info@quantumanalytics.com', '159 Data Science Lane', 'quantum123', '2024-01-11'),
+(12, 'Foodie Delight Co.', 9797654332, 'support@foodiedelight.com', '753 Gourmet St.', 'foodiepass', '2024-01-12'),
+(13, 'Visionary Tech', 9781234598, 'contact@visionarytech.com', '951 Innovation Blvd.', 'visiontechpass', '2024-01-13'),
+(14, 'Prime Logistics', 9776543299, 'info@primelogistics.com', '852 Logistics Dr.', 'primelogpass', '2024-01-14'),
+(15, 'Horizon Entertainment', 9763456790, 'contact@horizonentertainment.com', '741 Broadway Ave.', 'horizonpass', '2024-01-15'),
+(16, 'Stellar Finance Inc.', 9751234598, 'info@stellarfinance.com', '632 Wealthy Lane', 'stellarfins', '2024-01-16'),
+(17, 'CloudWorks', 9749876500, 'hello@cloudworks.com', '321 Cloud Blvd.', 'cloudsecure', '2024-01-17'),
+(18, 'FutureMed', 9736543200, 'support@futuremed.com', '521 Healthcare Rd.', 'futuremedpass', '2024-01-18'),
+(19, 'NextStep Mobility', 9723456791, 'contact@nextstepmobility.com', '412 Transport Ave.', 'nextstep123', '2024-01-19'),
+(20, 'InnovateEdu', 9711234599, 'info@innovateedu.com', '357 Learning St.', 'innovate123', '2024-01-20');
+
+INSERT INTO `company_branches` (address, company_ID) VALUES
+('Suite 101, 123 Silicon Blvd.', 1),
+('456 Art Lane, Floor 3', 2),
+('789 Industry Ave., Building A', 3),
+('321 Modern Rd., Tower 2', 4),
+('654 Digital Blvd., Block B', 5),
+('100 Future Ave., Wing C', 1),
+('800 Tech Park, Building D', 2),
+('450 Global Rd., HQ', 3),
+('910 Builder Blvd., Annex', 4),
+('640 AI Plaza, Sector 1', 5),
+('78 Innovation Lane, Wing A', 1),
+('99 Design District, Suite 8', 2),
+('400 Solutions St., Floor 5', 3),
+('701 Vision Rd., Block D', 4),
+('300 Neural Drive, Suite 4', 5),
+('321 Future City, Tower B', 1),
+('120 Creative Park, Wing C', 2),
+('500 Corporate Ave., HQ', 3),
+('830 Builder Park, Annex 2', 4),
+('945 AI Center, Innovation Wing', 5);
+
+INSERT INTO `active_jobs` (job_id, company_id, location, salary, is_filled, posting_date, closing_date) VALUES
+(1, 1, '123 Silicon Blvd., City A', 85000.00, FALSE, '2023-12-01', '2024-01-15'),
+(2, 2, '456 Art Lane, City B', 65000.00, FALSE, '2023-12-05', '2024-01-20'),
+(3, 3, '789 Industry Ave., City C', 75000.00, FALSE, '2023-12-10', '2024-01-25'),
+(4, 4, '321 Modern Rd., City D', 90000.00, FALSE, '2023-12-15', '2024-01-30'),
+(5, 5, '654 Digital Blvd., City E', 120000.00, FALSE, '2023-12-20', '2024-02-05'),
+(6, 1, '100 Future Ave., City F', 70000.00, TRUE, '2023-11-01', '2023-12-10'),
+(7, 2, '800 Tech Park, City G', 60000.00, FALSE, '2023-12-01', '2024-01-05'),
+(8, 3, '450 Global Rd., City H', 80000.00, FALSE, '2023-12-10', '2024-01-15'),
+(9, 4, '910 Builder Blvd., City I', 95000.00, TRUE, '2023-10-20', '2023-12-01'),
+(10, 5, '640 AI Plaza, City J', 115000.00, FALSE, '2023-12-18', '2024-01-30'),
+(11, 1, '78 Innovation Lane, City K', 85000.00, FALSE, '2023-12-22', '2024-02-01'),
+(12, 2, '99 Design District, City L', 70000.00, FALSE, '2023-12-25', '2024-02-10'),
+(13, 3, '400 Solutions St., City M', 75000.00, TRUE, '2023-11-10', '2023-12-15'),
+(14, 4, '701 Vision Rd., City N', 95000.00, FALSE, '2023-12-12', '2024-01-25'),
+(15, 5, '300 Neural Drive, City O', 125000.00, FALSE, '2023-12-30', '2024-02-20'),
+(16, 1, '321 Future City, City P', 70000.00, TRUE, '2023-11-15', '2023-12-30'),
+(17, 2, '120 Creative Park, City Q', 65000.00, FALSE, '2023-12-05', '2024-01-20'),
+(18, 3, '500 Corporate Ave., City R', 78000.00, TRUE, '2023-10-20', '2023-12-10'),
+(19, 4, '830 Builder Park, City S', 98000.00, FALSE, '2023-12-12', '2024-01-15'),
+(20, 5, '945 AI Center, City T', 130000.00, FALSE, '2023-12-30', '2024-02-28');
+
+INSERT INTO `user_job_applications` (account_ID, job_id, company_ID, application_date, application_status) VALUES
+(1, 1, 1, '2024-01-12', 'Pending'),
+(2, 2, 2, '2024-01-18', 'Accepted'),
+(3, 3, 3, '2024-01-25', 'Rejected'),
+(4, 4, 4, '2024-01-30', 'Pending'),
+(5, 5, 5, '2024-02-05', 'Accepted'),
+(6, 6, 1, '2024-01-10', 'Rejected'),
+(7, 7, 2, '2024-01-15', 'Pending'),
+(8, 8, 3, '2024-01-20', 'Accepted'),
+(9, 9, 4, '2024-01-25', 'Pending'),
+(10, 10, 5, '2024-01-30', 'Rejected'),
+(11, 11, 1, '2024-02-05', 'Accepted'),
+(12, 12, 2, '2024-01-10', 'Pending'),
+(13, 13, 3, '2024-01-15', 'Rejected'),
+(14, 14, 4, '2024-01-20', 'Accepted'),
+(15, 15, 5, '2024-01-25', 'Pending'),
+(16, 16, 1, '2024-01-30', 'Accepted'),
+(17, 17, 2, '2024-02-05', 'Rejected'),
+(18, 18, 3, '2024-01-10', 'Pending'),
+(19, 19, 4, '2024-01-15', 'Accepted'),
+(20, 20, 5, '2024-01-20', 'Rejected');
+
+INSERT INTO `company_employees` (account_ID, company_ID, date_hired) VALUES
+(1, 1, '2024-02-01'),
+(2, 2, '2024-02-05'),
+(3, 3, '2024-02-10'),
+(4, 4, '2024-02-15'),
+(5, 5, '2024-02-20'),
+(6, 1, '2024-02-25'),
+(7, 2, '2024-03-01'),
+(8, 3, '2024-03-05'),
+(9, 4, '2024-03-10'),
+(10, 5, '2024-03-15'),
+(11, 1, '2024-03-20'),
+(12, 2, '2024-03-25'),
+(13, 3, '2024-03-30'),
+(14, 4, '2024-04-05'),
+(15, 5, '2024-04-10'),
+(16, 1, '2024-04-15'),
+(17, 2, '2024-04-20'),
+(18, 3, '2024-04-25'),
+(19, 4, '2024-04-30'),
+(20, 5, '2024-05-05');
+
+SELECT * FROM user_accounts;
+SELECT * FROM company_accounts;
+SELECT * FROM active_jobs;
+SELECT * FROM REF_job_titles; 
+SELECT * FROM user_job_applications;
+SELECT * FROM company_branches; 
+SELECT * FROM company_employees; 

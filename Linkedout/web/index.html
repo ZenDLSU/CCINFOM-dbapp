@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedOut</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f6f9; 
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+
+        header {
+            background-color: #0073b1; 
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            background-color: #004080; 
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin: 10px 0 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            text-align: center;
+            color: #0073b1;
+            margin-bottom: 20px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            padding: 15px 10px;
+            background-color: #f3f6f9; 
+            text-align: center;
+            text-decoration: none;
+            color: #0073b1;
+            font-weight: bold;
+            border: 2px solid #0073b1;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .links a:hover {
+            background-color: #0073b1;
+            color: white;
+        }
+
+        footer {
+            background-color: #f3f6f9;
+            text-align: center;
+            padding: 10px 20px;
+            margin-top: 30px;
+            color: #555555;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #0073b1;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">LinkedOut</div>
+    </header>
+
+    <section class="hero">
+        <h1>Welcome to LinkedOut</h1>
+        <p>Connect to Opportunity</p>
+    </section>
+
+    <div class="container">
+        <h2>Quick Access</h2>
+        <div class="links">
+            <a href="userlogin.html">User Login</a>
+            <a href="companylogin.html">Company Login</a>
+            <a href="usersignup.html">User Sign Up</a>
+            <a href="companysignup.html">Company Sign Up</a>
+            <a href="reports.html">Reports</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 LinkedOut. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>

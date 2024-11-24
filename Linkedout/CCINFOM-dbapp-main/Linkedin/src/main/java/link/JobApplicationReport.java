@@ -19,7 +19,7 @@ public class JobApplicationReport extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-        List<JobApplications> jobApplications = new ArrayList<>(); // Use JobApplication if that's the correct class name
+        List<JobApplication> jobApplications = new ArrayList<>(); // Use JobApplication if that's the correct class name
 
         // SQL query to fetch job postings
         String query = "SELECT jp.job_ID, rjp.position_name, jp.status, jp.posting_date, " +
@@ -50,6 +50,6 @@ public class JobApplicationReport extends HttpServlet {
         } catch (Exception e) {
             // Handle exceptions and display error message
             response.getWriter().write("<h2>Error generating report:</h2><pre>" + e.getMessage() + "</pre>");
-        }
+        } 
     }
 }

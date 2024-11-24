@@ -76,12 +76,16 @@
                     <% 
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/group3s15?useSSL=false&serverTimezone=UTC", "root", "123456789");
-                            PreparedStatement pstmt = conn.prepareStatement("SELECT job_position_ID, position_name FROM job_position_reference");
+                            Connection conn = DriverManager.getConnection(
+                                "jdbc:mysql://localhost:3306/group3s15?useSSL=false&serverTimezone=UTC", 
+                                "root", 
+                                "123456789"
+                            );
+                            PreparedStatement pstmt = conn.prepareStatement("SELECT position_ID, position_name FROM REF_job_position");
                             ResultSet rs = pstmt.executeQuery();
                             while (rs.next()) {
                     %>
-                    <option value="<%= rs.getInt("job_position_ID") %>"><%= rs.getString("position_name") %></option>
+                    <option value="<%= rs.getInt("position_ID") %>"><%= rs.getString("position_name") %></option>
                     <% 
                             }
                             rs.close();

@@ -167,7 +167,7 @@ VALUES
 ('0014', 'Ryugu', 'Finana', '123-456-7803', 'finana@nijisanji.jp', 'Tokyo, Japan', '1999-02-12', '2', 'Bachelor in Fine Arts', 'Japanese', '0009', '0002', '123456'),
 ('0015', 'Yume', 'Saitou', '123-456-7804', 'saitou@vshojo.com', 'Kyoto, Japan', '2000-06-07', '1', 'Bachelor in Marketing', 'Japanese', '0001', '0005', '123456');
 
-INSERT INTO 'job_applications' (application_ID, job_ID, account_ID, posting_ID, application_date, status) 
+INSERT INTO `job_applications` (application_ID, job_ID, account_ID, posting_ID, application_date, status) 
 VALUES
 ('0001', '0001', '0001', '0001', '2020-05-27', 'Under Review'),
 ('0002', '0002', '0013', '0002', '2020-07-24', 'Under Review'),

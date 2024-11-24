@@ -1,5 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.*,link.*,java.time.LocalDate,java.time.format.DateTimeFormatter" %>
+
+<%-- 
+    Author     : zen
+--%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,12 +20,12 @@
                 String branch_ID = request.getParameter("branch_ID");
                 String position_ID = request.getParameter("position_ID");
 
-                // Set parameters in the jobs management bean
+                //set parameters in jobs management 
                 B.company_ID = Integer.parseInt(company_ID);
                 B.branch_ID = (branch_ID == null || branch_ID.isEmpty()) ? -1 : Integer.parseInt(branch_ID);
                 B.position_ID = Integer.parseInt(position_ID);
 
-                // Call post_job method
+
                 int result = B.post_job();
                 if (result == 0) {
         %>

@@ -1,129 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Status and Expiry Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-        }
-        .report-container {
-            width: 800px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .report-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group select, .form-group button {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-group button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #f4f4f9;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .no-data {
-            text-align: center;
-            margin: 20px 0;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
-    <div class="report-container">
-        <h1>Job Status and Expiry Report</h1>
-        
-        <form action="generateReport" method="GET">
-            <div class="form-group">
-                <label for="timeDimension">Select Time Dimension</label>
-                <select id="timeDimension" name="timeDimension" required>
-                    <option value="day">By Day</option>
-                    <option value="month">By Month</option>
-                    <option value="year">By Year</option>
-                    <option value="monthYear">By Month and Year</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit">Generate Report</button>
-            </div>
-        </form>
-        
-        <!-- Example of a Report Table (content dynamically populated by backend) -->
-        <h2>Report: By Month and Year</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Job ID</th>
-                    <th>Position</th>
-                    <th>Status</th>
-                    <th>Date Created</th>
-                    <th>Date Expired/Closed</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Placeholder data -->
-                <tr>
-                    <td>1</td>
-                    <td>Software Engineer</td>
-                    <td>Active</td>
-                    <td>2024-11-01</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Project Manager</td>
-                    <td>Expired</td>
-                    <td>2024-06-15</td>
-                    <td>2024-09-15</td>
-                </tr>
-            </tbody>
-        </table>
+ 
+//Author     : zen
 
-     
-    </div>
-</body>
-</html>
+package link;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/StatusAndExpiryReport")
+public class StatusAndExpiryReport extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try (Connection conn = DatabaseConnection.initializeDatabase()) {
+            // Fetch summary data
+            Map<String, Integer> summaryData = fetchSummaryData(conn);
+
+            // Fetch job listings
+            List<Map<String, Object>> jobListings = fetchJobListings(conn);
+
+            // Add data to request
+            request.setAttribute("summaryData", summaryData);
+            request.setAttribute("jobListings", jobListings);
+
+            // Forward to JSP
+            RequestDispatcher dispatcher = request.getRequestDispatcher("status_and_expiry.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error fetching report data.");
+        }
+    }
+
+    private Map<String, Integer> fetchSummaryData(Connection conn) throws Exception {
+        Map<String, Integer> summaryData = new HashMap<>();
+        String[] queries = {
+            "SELECT COUNT(*) AS total FROM user_accounts",
+            "SELECT COUNT(*) AS total FROM job_postings",
+            "SELECT COUNT(*) AS total FROM companies",
+            "SELECT COUNT(*) AS total FROM branches"
+        };
+        String[] keys = {"Total Accounts", "Total Job Listings", "Total Companies", "Total Branches"};
+
+        for (int i = 0; i < queries.length; i++) {
+            try (PreparedStatement stmt = conn.prepareStatement(queries[i]);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    summaryData.put(keys[i], rs.getInt("total"));
+                }
+            }
+        }
+        return summaryData;
+    }
+
+    private List<Map<String, Object>> fetchJobListings(Connection conn) throws Exception {
+        List<Map<String, Object>> jobListings = new ArrayList<>();
+        String query = "SELECT posting_ID, position_ID, company_ID, branch_ID, posting_date, expiry_date, status FROM job_postings";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> job = new HashMap<>();
+                job.put("posting_ID", rs.getInt("posting_ID"));
+                job.put("position_ID", rs.getInt("position_ID"));
+                job.put("company_ID", rs.getInt("company_ID"));
+                job.put("branch_ID", rs.getInt("branch_ID"));
+                job.put("posting_date", rs.getDate("posting_date"));
+                job.put("expiry_date", rs.getDate("expiry_date"));
+                job.put("status", rs.getString("status"));
+                jobListings.add(job);
+            }
+        }
+        return jobListings;
+    }
+}
